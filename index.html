@@ -587,141 +587,208 @@
       border: 1px solid rgba(255,255,255,0.2);
     }
 
-    /* --- Screen 4: 纪念相册与终极祝福卡片 --- */
-    .final-card {
-      max-width: 390px;
-      padding: 24px 20px;
+    /* --- Screen 4: 北大校园足迹手账回忆轴 --- */
+    #screenFinal {
+      display: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 30px 16px 50px;
+      justify-content: flex-start;
+      align-items: center;
+      z-index: 15;
     }
 
-    /* 相册轮播容器 */
-    .carousel-container {
+    #screenFinal.active {
+      display: flex;
+    }
+
+    .scrapbook-container {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .scrapbook-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 32px;
+      padding: 28px 20px;
+      box-shadow: 0 15px 35px rgba(156, 44, 44, 0.08);
+      text-align: center;
+    }
+
+    .timeline-intro {
+      margin-bottom: 24px;
+    }
+
+    /* 手账时间线主轴 */
+    .footprint-timeline {
       position: relative;
       width: 100%;
-      height: 280px;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-      background: #eaeaea;
+      margin: 15px auto 30px;
+      padding-left: 20px;
+      border-left: 2.5px dashed rgba(156, 44, 44, 0.35);
+      text-align: left;
     }
 
-    .carousel-track {
-      display: flex;
-      width: 1000%; /* 10张图，每张占 10% */
-      height: 100%;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .carousel-item {
-      width: 10%;
-      height: 100%;
-      flex-shrink: 0;
+    .timeline-item {
       position: relative;
+      margin-bottom: 45px;
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .carousel-item img {
+    /* 滚动进入视口时的淡入样式 */
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 时间轴红点节点 */
+    .timeline-node {
+      position: absolute;
+      left: -29.5px; /* -20px(padding-left) - 1.25px(line center) - 8px(radius) = -29.25px */
+      top: 6px;
+      width: 16px;
+      height: 16px;
+      background: radial-gradient(circle, #e53e3e 0%, var(--pku-red) 70%);
+      border: 2px solid white;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(156, 44, 44, 0.15);
+      z-index: 5;
+    }
+
+    .timeline-node::after {
+      content: '🐾';
+      position: absolute;
+      font-size: 10px;
+      top: -3px;
+      left: 1px;
+    }
+
+    /* 拍立得照片卡片 */
+    .polaroid-card {
+      background: white;
+      border-radius: 6px;
+      padding: 12px 12px 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s;
+    }
+
+    /* 倾斜角错落排列 */
+    .timeline-item:nth-child(even) .polaroid-card {
+      transform: rotate(-1.5deg);
+    }
+
+    .timeline-item:nth-child(odd) .polaroid-card {
+      transform: rotate(1.5deg);
+    }
+
+    /* 精美纸胶带装饰 */
+    .polaroid-tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-4deg);
+      width: 70px;
+      height: 20px;
+      background: rgba(255, 182, 193, 0.55);
+      border: 1px dashed rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      z-index: 10;
+    }
+
+    .timeline-item:nth-child(even) .polaroid-tape {
+      background: rgba(212, 175, 55, 0.4);
+      transform: translateX(-50%) rotate(3deg);
+    }
+
+    .location-badge {
+      align-self: flex-start;
+      background: var(--pku-red);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(156, 44, 44, 0.2);
+    }
+
+    .polaroid-img-wrapper {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      border-radius: 2px;
+      border: 1px solid #f7fafc;
+      background: #f7fafc;
+    }
+
+    .polaroid-img-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .carousel-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
+    .polaroid-desc {
+      font-family: "Georgia", "Kaiti", "STKaiti", cursive, serif;
+      font-size: 14px;
+      color: #4A5568;
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+      font-style: italic;
+      word-break: break-all;
+    }
+
+    /* 毕业祝福手写卡片 */
+    .letter-card {
+      background: linear-gradient(135deg, #fff9f9 0%, #fff 100%);
+      border: 1px solid rgba(156, 44, 44, 0.15);
+      box-shadow: 0 10px 30px rgba(156, 44, 44, 0.05);
+      border-radius: 24px;
+      padding: 28px 20px;
+      margin-top: 10px;
       width: 100%;
-      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
-      color: white;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 12px 14px 10px;
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    /* 左右按钮 */
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: white;
-      font-size: 16px;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      z-index: 12;
-      transition: background 0.2s;
-    }
-
-    .carousel-btn:active {
-      background: rgba(255, 255, 255, 0.5);
-    }
-
-    .carousel-btn.prev { left: 12px; }
-    .carousel-btn.next { right: 12px; }
-
-    /* 指示圆点 */
-    .carousel-dots {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 6px;
-      z-index: 13;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
-      transition: background 0.3s, width 0.3s;
-    }
-
-    .dot.active {
-      background: white;
-      width: 16px;
-      border-radius: 10px;
-    }
-
-    .blessing-content {
       text-align: center;
     }
 
-    .blessing-title {
+    .letter-title {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: bold;
       color: var(--pku-red);
       margin-bottom: 6px;
-      letter-spacing: 0.5px;
     }
 
-    .blessing-sub {
+    .letter-subtitle {
       font-size: 14px;
       font-weight: 600;
       color: var(--text-dark);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .blessing-divider {
+    .letter-divider {
       border: 0;
       border-top: 1.5px dashed rgba(156, 44, 44, 0.2);
-      margin: 12px 0;
+      margin: 16px 0;
     }
 
-    .blessing-desc {
-      font-size: 13.5px;
-      line-height: 1.6;
+    .letter-text {
+      font-size: 14px;
+      line-height: 1.7;
       color: #4A5568;
       font-style: italic;
     }
@@ -844,35 +911,36 @@
       <div class="victory-box" id="victoryOverlay">
         <div class="victory-title">VICTORY</div>
         <div class="victory-badge">👑 荣耀毕业生 · 大融城特级美食家</div>
-        <button class="pku-btn" id="victoryBtn" style="box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%);">查看毕业纪念册</button>
+        <button class="pku-btn" id="victoryBtn" style="box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%);">开启校园足迹相册</button>
       </div>
     </div>
   </div>
 
-  <!-- --- SCREEN 4: 纪念相册与终极祝福 --- -->
+  <!-- --- SCREEN 4: 北大校园足迹回忆手账 (最终展示) --- -->
   <div class="screen" id="screenFinal">
-    <div class="card final-card">
-      <!-- 照片相册轮播 -->
-      <div class="carousel-container">
-        <div class="carousel-track" id="carouselTrack">
-          <!-- JS 动态加载 10 张照片 -->
-        </div>
-        <button class="carousel-btn prev" id="prevBtn">❮</button>
-        <button class="carousel-btn next" id="nextBtn">❯</button>
-        <div class="carousel-dots" id="carouselDots">
-          <!-- 动态生成 10 个圆点 -->
+    <div class="scrapbook-container">
+      
+      <!-- 手账标题头卡 -->
+      <div class="scrapbook-card">
+        <h2 style="color: var(--pku-red); margin-bottom: 8px;">📖 alick的校园足迹手账</h2>
+        <p style="font-size: 13.5px; color: var(--text-gray); line-height: 1.6;">“这学期我们在北大留下了许多足迹。滑动屏幕，一起重温这些温暖的瞬间。”</p>
+      </div>
+
+      <!-- 足迹回忆轴 -->
+      <div class="footprint-timeline" id="footprintTimeline">
+        <!-- JS 动态注入 10 张具有时间线淡入动效的拍立得卡片 -->
+      </div>
+
+      <!-- 终章手写祝福信 -->
+      <div class="letter-card">
+        <div class="letter-title">🎉 祝 alick 毕业快乐 🎉</div>
+        <div class="letter-subtitle">北京大学元培学院 · PPE专业 法学学士</div>
+        <hr class="letter-divider">
+        <div class="letter-text">
+          “恭喜你正式毕业拿到法学学士学位！从这学期初见那条奇妙的树洞，到一起打王者连击，再到一起吃遍大融城的美食。在未来的日子里，我们继续并肩作战，打爆王者，吃遍世界的美食，携手走过更多美好的风景！”
         </div>
       </div>
 
-      <!-- 毕业祝福信 -->
-      <div class="blessing-content">
-        <div class="blessing-title">🎉 祝 alick 毕业快乐 🎉</div>
-        <div class="blessing-sub">北京大学元培学院 · PPE专业 法学学士</div>
-        <hr class="blessing-divider">
-        <div class="blessing-desc">
-          “恭喜你正式毕业拿到法学学士学位！从这学期初见那条奇妙的树洞，到一起打王者连击，一起吃遍大融城的美食。在未来的日子里，我们继续并肩作战，打爆王者，吃遍世界的美食，携手走过更多美好的风景！”
-        </div>
-      </div>
     </div>
   </div>
 
@@ -930,7 +998,13 @@
     // 辅助场景切换
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
+      const activeScreen = document.getElementById(screenId);
+      activeScreen.classList.add('active');
+      
+      // 如果进入了最终相册页，重置滚动位置
+      if (screenId === 'screenFinal') {
+        activeScreen.scrollTop = 0;
+      }
     }
 
     // --- 3. Screen 1: 拨穗与学士帽交互 ---
@@ -1117,7 +1191,7 @@
 
       // 1. 水晶物理打击缩放反馈
       crystalBtn.style.transform = 'scale(0.92)';
-      setTimeout(() => { crystalBtn.style.transform = 'scale(1)'; }, 80s * 0.001);
+      setTimeout(() => { crystalBtn.style.transform = 'scale(1)'; }, 80);
 
       // 2. 散射飘动文字
       const rect = crystalBtn.getBoundingClientRect();
@@ -1171,96 +1245,79 @@
 
     victoryBtn.addEventListener('click', () => {
       showScreen('screenFinal');
-      initPhotoCarousel();
+      initFootprintTimeline();
     });
 
-    // --- 6. 毕业纪念相册轮播系统 ---
-    const photos = [
-      { src: "assets/photo_4.jpg", text: "未名湖畔相依，阳光洒在我们的身上 💚" },
-      { src: "assets/photo_1.jpg", text: "坐在阳光明媚的教室里，安静而温暖 ☀️" },
-      { src: "assets/photo_2.jpg", text: "元培学院典礼台上，庄严接取学士证书 🎓" },
-      { src: "assets/photo_3.jpg", text: "与龚旗煌校长亲切合照，开心的笑脸 ✌️" },
-      { src: "assets/photo_5.jpg", text: "在图书馆书架间探寻，寻找属于未来的那一页 📖" },
-      { src: "assets/photo_6.jpg", text: "我是大富婆，他是我的小白脸！图书馆搞怪还原合影 🤭" },
-      { src: "assets/photo_7.jpg", text: "图书馆前，朝相机送去最甜的爱心指心 💖" },
-      { src: "assets/photo_8.jpg", text: "未名湖畔柳树依依，温柔晚风抚发 🍃" },
-      { src: "assets/photo_9.jpg", text: "站在未名湖石桥上，倚靠桥栏微风拂面 🌸" },
-      { src: "assets/photo_0.jpg", text: "手捧精美喜庆的北大红信封与毕业周边 🧧" }
+    // --- 6. 北大足迹回忆轴数据与初始化 ---
+    const footprints = [
+      { src: "assets/photo_1.jpg", loc: "📍 教学楼教室 · 阳光午后", desc: "在安静温馨的教室里，洒满暖暖的阳光。这是我们最平实又真切的学习时光。" },
+      { src: "assets/photo_5.jpg", loc: "📍 北大图书馆 · 墨香走廊", desc: "穿行在密密麻麻的书架走廊之间，我们一起探索知识，累积属于未来的页码。" },
+      { src: "assets/photo_6.jpg", loc: "📍 图书馆内部 · 趣味玩梗", desc: "‘我是大富婆，他是我的小白脸！’，我们在宏伟的图书馆阁楼里，留下最调皮的合影模仿。" },
+      { src: "assets/photo_7.jpg", loc: "📍 图书馆前 · 浪漫指心", desc: "站在恢弘的北大图书馆台阶下，迎着微风向相机比出指尖爱心，送给彼此最甜的温柔。" },
+      { src: "assets/photo_8.jpg", loc: "📍 未名湖畔 · 垂柳依依", desc: "未名湖畔微风抚琴，青青的柳树垂下枝条，掠过你温柔的侧颜。这一刻时间静止了。" },
+      { src: "assets/photo_9.jpg", loc: "📍 石桥栏杆 · 温柔微笑", desc: "斜斜的夕阳照亮桥头的白石，你斜依在栏杆上温柔微笑，胜过了未名湖畔所有的风景。" },
+      { src: "assets/photo_4.jpg", loc: "📍 湖边绿地 · 执手同行", desc: "暖金色的斜阳洒在我们身上，未名湖的水倒映着天空。我们要一直并肩走下去。" },
+      { src: "assets/photo_0.jpg", loc: "📍 北大校园 · 毕业纪念周边", desc: "捧着红红的毕业答卷袋和纪念签，四年奔跑终于迎来了收获的这一天。" },
+      { src: "assets/photo_2.jpg", loc: "📍 百年纪念讲堂 · 典礼受礼", desc: "典礼台中央，您代表元培学院庄严接过了沉甸甸的学位证书。恭喜你拿到法学学士学位！" },
+      { src: "assets/photo_3.jpg", loc: "📍 典礼台下 · 与龚校长合影", desc: "和龚校长合影自拍！镜头前的笑脸在闪光灯下定格，你是我们心中最棒的荣耀毕业生！" }
     ];
 
-    let currentSlide = 0;
-    const carouselTrack = document.getElementById('carouselTrack');
-    const carouselDots = document.getElementById('carouselDots');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+    const timelineContainer = document.getElementById('footprintTimeline');
 
-    function initPhotoCarousel() {
+    function initFootprintTimeline() {
       // 避免重复初始化
-      if (carouselTrack.children.length > 0) return;
+      if (timelineContainer.children.length > 0) return;
 
-      carouselTrack.innerHTML = '';
-      carouselDots.innerHTML = '';
-      
-      photos.forEach((photo, idx) => {
-        // 创建slide slide
+      timelineContainer.innerHTML = '';
+      footprints.forEach((fp) => {
+        // 创建 timeline item DOM
         const item = document.createElement('div');
-        item.className = 'carousel-item';
+        item.className = 'timeline-item';
         item.innerHTML = `
-          <img src="${photo.src}" alt="毕业纪念照">
-          <div class="carousel-caption">${photo.text}</div>
+          <div class="timeline-node"></div>
+          <div class="polaroid-card">
+            <div class="polaroid-tape"></div>
+            <span class="location-badge">${fp.loc}</span>
+            <div class="polaroid-img-wrapper">
+              <img src="${fp.src}" alt="${fp.loc}">
+            </div>
+            <p class="polaroid-desc">“${fp.desc}”</p>
+          </div>
         `;
-        carouselTrack.appendChild(item);
-
-        // 创建 dot dot
-        const dot = document.createElement('div');
-        dot.className = `dot ${idx === 0 ? 'active' : ''}`;
-        dot.addEventListener('click', () => jumpToSlide(idx));
-        carouselDots.appendChild(dot);
+        timelineContainer.appendChild(item);
       });
+
+      // 注册滚动淡入观察器
+      registerScrollObserver();
     }
 
-    function updateCarousel() {
-      carouselTrack.style.transform = `translateX(-${currentSlide * 10}%)`;
-      const dots = carouselDots.querySelectorAll('.dot');
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentSlide);
+    function registerScrollObserver() {
+      const items = document.querySelectorAll('.timeline-item');
+      
+      // 使用 IntersectionObserver 实现高性能滚动触发淡入
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // 一旦显示便停止观察
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: document.getElementById('screenFinal'),
+        threshold: 0.15, // 元素进入视口 15% 即触发
+        rootMargin: "0px 0px -50px 0px" // 略微提前触发以实现流畅的进入动画
       });
+
+      items.forEach(item => observer.observe(item));
+
+      // 兜底：对首屏能看到的几张卡片立刻触发显示
+      setTimeout(() => {
+        for (let i = 0; i < Math.min(items.length, 2); i++) {
+          items[i].classList.add('visible');
+        }
+      }, 100);
     }
-
-    function jumpToSlide(idx) {
-      currentSlide = idx;
-      updateCarousel();
-    }
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % photos.length;
-      updateCarousel();
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + photos.length) % photos.length;
-      updateCarousel();
-    }
-
-    prevBtn.addEventListener('click', prevSlide);
-    nextBtn.addEventListener('click', nextSlide);
-
-    // 适配手指滑屏切换
-    let touchStartX = 0;
-    carouselTrack.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-    }, { passive: true });
-
-    carouselTrack.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].clientX;
-      const diffX = touchEndX - touchStartX;
-      if (diffX > 50) {
-        prevSlide();
-      } else if (diffX < -50) {
-        nextSlide();
-      }
-    }, { passive: true });
-
   </script>
 </body>
 </html>
