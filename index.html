@@ -368,7 +368,7 @@
       line-height: 1.6;
     }
 
-    /* --- Screen 3: 王者小游戏 --- */
+    /* --- Screen 3: 毕业大合力游戏 --- */
     .game-card {
       background: radial-gradient(circle at center, #0F1A30 0%, #060B18 100%);
       color: white;
@@ -475,6 +475,7 @@
       animation: floatScatter 0.8s forwards ease-out;
       text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 4px #00BFFF;
       z-index: 10;
+      white-space: nowrap;
     }
 
     @keyframes floatScatter {
@@ -842,19 +843,19 @@
         谁能想到这两个挂在树洞捞人的小朋友，<br>就这么被命运悄悄牵上线了呢！ ✨
       </div>
 
-      <button class="pku-btn" id="startHoleBtn" style="opacity: 0; transition: opacity 0.6s;">看我们是如何并肩战斗的</button>
+      <button class="pku-btn" id="startHoleBtn" style="opacity: 0; transition: opacity 0.6s;">看我们是如何并肩前行的</button>
     </div>
   </div>
 
-  <!-- --- SCREEN 3: 王者连击小游戏 --- -->
+  <!-- --- SCREEN 3: 毕业大合力游戏 --- -->
   <div class="screen" id="screenGame">
     <div class="card game-card">
-      <div class="game-title">⚔️ 毕业大作战 ⚔️</div>
+      <div class="game-title">🎓 毕业大合力 🎓</div>
       <div class="game-desc">狂戳中心的水晶，帮助 alick 疯狂充能！</div>
 
       <div class="game-stats">
         <div class="stat-badge">
-          <div class="stat-label">COMBO 连击</div>
+          <div class="stat-label">TAP 累计点击</div>
           <div class="stat-value" id="comboCount">0</div>
         </div>
         <div class="stat-badge">
@@ -869,12 +870,12 @@
         <div id="tapEffectsLayer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
       </div>
 
-      <div class="game-banner" id="gameBanner">FIRST BLOOD</div>
+      <div class="game-banner" id="gameBanner">蓄势待发</div>
 
-      <!-- 王者荣耀胜利弹出面板 -->
+      <!-- 胜利弹出面板 -->
       <div class="victory-box" id="victoryOverlay">
         <div class="victory-title">VICTORY</div>
-        <div class="victory-badge">👑 荣耀毕业生 · 大融城特级干饭人</div>
+        <div class="victory-badge">👑 荣誉毕业生 · 大融城特级干饭人</div>
         <button class="pku-btn" id="victoryBtn" style="box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%);">看看这学期咱们留下的足迹</button>
       </div>
     </div>
@@ -901,7 +902,7 @@
         <div class="letter-subtitle">北京大学元培学院 · PPE专业 法学学士</div>
         <hr class="letter-divider">
         <div class="letter-text">
-          “恭喜法学学士 alick 顺利毕业！打王者你玩辅助，我玩射手，有你在身旁默默保驾护航，我永远能拿五杀！在大融城干饭虽然多，但吃饱了才能在以后的日子里继续并肩战斗。未来打游戏你只管跟着我，吃大餐我负责买单，我们携手通关人生这个终极副本！”
+          “恭喜法学学士 alick 顺利毕业！这学期有你在身旁默默支持和陪伴，是我最幸福的事！在大融城干饭虽然多，但吃饱了才能在以后的日子里继续并肩战斗。未来吃大餐我负责买单，我们携手前行，一起通关人生这个终极副本！”
         </div>
       </div>
 
@@ -1137,7 +1138,7 @@
       showScreen('screenGame');
     });
 
-    // --- 5. Screen 3: 王者连击游戏逻辑 ---
+    // --- 5. Screen 3: 毕业大合力游戏逻辑 ---
     const crystalBtn = document.getElementById('crystalBtn');
     const comboCount = document.getElementById('comboCount');
     const gpaVal = document.getElementById('gpaVal');
@@ -1150,17 +1151,28 @@
     let currentGpa = 0.00;
     const maxClicks = 12;
 
+    // 12个完全不同的彩虹屁/吹捧词
     const gameWords = [
-      "绩点+0.1", "大融城干饭 🍖", "射手输出带飞 🏹", "辅助贴身护驾 🛡️",
-      "元培PPE 👑", "可爱值+999", "买奶茶 🥤", "法学学士学位 ⚖️"
+      "alick最美！✨",
+      "元培之光！🌟",
+      "美貌与智慧并存！💖",
+      "法学大才女！⚖️",
+      "干饭小能手！🍜",
+      "可爱值爆表！💯",
+      "论文超满分！📝",
+      "李猛院长点赞！👍",
+      "宇宙第一好看！🪐",
+      "满分法学学士！🎓",
+      "心动值拉满！💓",
+      "毕业大吉！🎉"
     ];
 
     const killVoiced = {
-      1: "FIRST BLOOD! (大四开学)",
-      3: "DOUBLE KILL! (绩点飞升)",
-      6: "TRIPLE KILL! (论文通过)",
-      9: "QUADRA KILL! (大融城免单)",
-      12: "PENTA KILL! (顺利毕业！)"
+      1: "能量启动！ (大四开学)",
+      3: "蓄力攀升！ (绩点飞升)",
+      6: "毕业答辩！ (论文通过)",
+      9: "万事俱备！ (大融城加餐)",
+      12: "大功告成！ (顺利毕业！)"
     };
 
     crystalBtn.addEventListener('pointerdown', (e) => {
@@ -1181,7 +1193,8 @@
 
       const floatText = document.createElement('div');
       floatText.className = 'floating-word';
-      floatText.innerText = gameWords[Math.floor(Math.random() * gameWords.length)];
+      // 保证每一次弹出的词都是唯一对应的
+      floatText.innerText = gameWords[clicks - 1];
       
       const angle = Math.random() * Math.PI * 2;
       const dist = Math.random() * 60 + 50;
@@ -1226,12 +1239,12 @@
 
     // --- 6. 北大足迹回忆轴数据与初始化 ---
     const footprints = [
-      { src: "assets/photo_1.jpg", loc: "📍 教学楼教室 · 排位开黑", desc: "在教室里认真听课……好吧，其实主要是为了在空调房里愉快地排位开黑。" },
+      { src: "assets/photo_1.jpg", loc: "📍 教学楼教室 · 自习纳凉", desc: "在教室里认真听课……好吧，其实主要是为了在空调房里愉快地吹冷气吃零食。" },
       { src: "assets/photo_5.jpg", loc: "📍 北大图书馆 · 搜寻文献", desc: "在图书馆假装沉迷学术，其实满脑子都在谋划中午去大融城吃什么大餐。" },
       { src: "assets/photo_6.jpg", loc: "📍 图书馆内部 · 戏精附体", desc: "“大富婆与她的小白脸”，戏精情侣在图书馆的满分cosplay，今日营业中！" },
-      { src: "assets/photo_7.jpg", loc: "📍 图书馆前 · 场外连线", desc: "在图书馆前，送给你最甜的心跳，顺便催促射手快点上线！" },
-      { src: "assets/photo_8.jpg", loc: "📍 未名湖畔 · 风景如画", desc: "未名湖的柳树真绿，旁边的女孩真好看。以后打游戏，你只管保护我，我来输出带飞！" },
-      { src: "assets/photo_9.jpg", loc: "📍 石桥栏杆 · 致命拿捏", desc: "看着你在桥头微笑，我心想：完了，这下真被拿捏了，这辈子打游戏都得听辅助指挥了。" },
+      { src: "assets/photo_7.jpg", loc: "📍 图书馆前 · 场外连线", desc: "在图书馆前，送给你最甜的心跳，顺便商量中午吃什么大餐！" },
+      { src: "assets/photo_8.jpg", loc: "📍 未名湖畔 · 风景如画", desc: "未名湖的柳树真绿，旁边的女孩真好看。未来的路上你只管往前走，我一直在身后保护你！" },
+      { src: "assets/photo_9.jpg", loc: "📍 石桥栏杆 · 致命拿捏", desc: "看着你在桥头微笑，我心想：完了，这下真被拿捏了，这辈子都得听你的话啦。" },
       { src: "assets/photo_4.jpg", loc: "📍 湖边绿地 · 饭后消食", desc: "牵手散步（主要是消食，为了给下一顿大融城做准备）。" },
       { src: "assets/photo_0.jpg", loc: "📍 北大校园 · 毕业战利品", desc: "拿到红红的元培毕业周边。元培PPE学成归来，这下可以高高兴兴回家‘谏政’啦！" },
       { src: "assets/photo_2.jpg", loc: "📍 百年纪念讲堂 · 毕业受礼", desc: "台上一分钟，台下四年功。恭喜 alick 喜提“法学学士学位”荣誉称号！" },
