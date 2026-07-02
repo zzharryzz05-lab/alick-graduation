@@ -329,52 +329,7 @@
       gap: 6px;
     }
 
-    .treehole-badge {
-      background: var(--pku-red-light);
-      color: var(--pku-red);
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: bold;
-    }
-
-    .hole-post {
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-      text-align: left;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
-    }
-
-    .post-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--text-gray);
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
-    .post-text {
-      font-size: 15px;
-      font-weight: 500;
-      line-height: 1.5;
-    }
-
-    .reply-meta {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .reply-tag {
-      color: var(--pku-red);
-      font-weight: 700;
-    }
-
-    /* 树洞心心连接动画 */
+    /* --- Screen 2: 树洞相遇心心连接 --- */
     .heart-connector {
       display: flex;
       flex-direction: column;
@@ -636,10 +591,6 @@
       text-align: center;
     }
 
-    .timeline-intro {
-      margin-bottom: 24px;
-    }
-
     /* 手账时间线主轴 */
     .footprint-timeline {
       position: relative;
@@ -860,7 +811,6 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--pku-red);"><path d="M12 2L2 22h20L12 2z"/><path d="M12 10v6"/><path d="M12 18h.01"/></svg>
           北大树洞
         </span>
-        <span class="treehole-badge">元培专区</span>
       </div>
 
       <div class="hole-post">
@@ -889,10 +839,10 @@
       </div>
 
       <div class="hole-tip" id="holeTip" style="opacity: 0; transition: opacity 0.6s;">
-        树洞有风险，脱单需谨慎。<br>谁能想到两个好想谈恋爱的糊涂蛋，就这么接上头了！ 🤪
+        谁能想到这两个挂在树洞捞人的小朋友，<br>就这么被命运悄悄牵上线了呢！ ✨
       </div>
 
-      <button class="pku-btn" id="startHoleBtn" style="opacity: 0; transition: opacity 0.6s;">看我们是如何并肩作案的</button>
+      <button class="pku-btn" id="startHoleBtn" style="opacity: 0; transition: opacity 0.6s;">看我们是如何并肩战斗的</button>
     </div>
   </div>
 
@@ -924,8 +874,8 @@
       <!-- 王者荣耀胜利弹出面板 -->
       <div class="victory-box" id="victoryOverlay">
         <div class="victory-title">VICTORY</div>
-        <div class="victory-badge">🏆 元培国服第一吃货 · 大融城特级干饭人</div>
-        <button class="pku-btn" id="victoryBtn" style="box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%);">看看这学期咱们摸了多少鱼</button>
+        <div class="victory-badge">👑 荣耀毕业生 · 大融城特级干饭人</div>
+        <button class="pku-btn" id="victoryBtn" style="box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%);">看看这学期咱们留下的足迹</button>
       </div>
     </div>
   </div>
@@ -937,7 +887,7 @@
       <!-- 手账标题头卡 -->
       <div class="scrapbook-card">
         <h2 style="color: var(--pku-red); margin-bottom: 8px;">📖 alick的校园足迹手账</h2>
-        <p style="font-size: 13.5px; color: var(--text-gray); line-height: 1.6;">“回顾这学期在北大到处摸鱼乱晃的足迹。向下滑动，一起围观大型翻车现场。”</p>
+        <p style="font-size: 13.5px; color: var(--text-gray); line-height: 1.6;">“回顾这学期在北大走过的足迹。向下滑动，一起温习那些好玩的瞬间。”</p>
       </div>
 
       <!-- 足迹回忆轴 -->
@@ -951,7 +901,7 @@
         <div class="letter-subtitle">北京大学元培学院 · PPE专业 法学学士</div>
         <hr class="letter-divider">
         <div class="letter-text">
-          “恭喜法学学士 alick 顺利毕业！虽然这学期打王者你经常送人头（但我永远是你的国服带飞辅助！），在大融城干饭虽然多，但吃饱了才能继续在人生的新征程上并肩搬砖！未来打游戏我继续给你打辅助，吃大餐我负责买单，我们携手通关人生这个终极副本！”
+          “恭喜法学学士 alick 顺利毕业！打王者你玩辅助，我玩射手，有你在身旁默默保驾护航，我永远能拿五杀！在大融城干饭虽然多，但吃饱了才能在以后的日子里继续并肩战斗。未来打游戏你只管跟着我，吃大餐我负责买单，我们携手通关人生这个终极副本！”
         </div>
       </div>
 
@@ -989,7 +939,6 @@
     const bgm = document.getElementById('bgm');
     const musicBtn = document.getElementById('musicBtn');
     
-    // 设置音量适中
     bgm.volume = 0.5;
 
     musicBtn.addEventListener('click', () => {
@@ -1015,7 +964,6 @@
       const activeScreen = document.getElementById(screenId);
       activeScreen.classList.add('active');
       
-      // 如果进入了最终相册页，重置滚动位置
       if (screenId === 'screenFinal') {
         activeScreen.scrollTop = 0;
       }
@@ -1029,24 +977,21 @@
     const throwStage = document.getElementById('throwStage');
     const throwCapBtn = document.getElementById('throwCapBtn');
 
-    const capCenterX = 110; // 流苏悬垂支点坐标
-    let tasselAngle = 35; // 默认悬挂偏右 35 度
+    const capCenterX = 110;
+    let tasselAngle = 35;
     let isDraggingTassel = false;
     let dragStartX = 0;
 
-    // 根据倾角渲染流苏线和流苏红结位置
     function updateTasselPosition(deg) {
       tasselLine.style.transform = `rotate(${deg}deg)`;
       const rad = deg * Math.PI / 180;
-      // 流苏细线长 50px
       const knotX = capCenterX + Math.sin(rad) * 50;
       const knotY = 52 + Math.cos(rad) * 50;
       
-      tasselKnot.style.left = `${knotX - 18}px`; // 减去结半径(18px)居中
+      tasselKnot.style.left = `${knotX - 18}px`;
       tasselKnot.style.top = `${knotY - 18}px`;
     }
 
-    // 默认定位
     updateTasselPosition(tasselAngle);
 
     tasselKnot.addEventListener('pointerdown', (e) => {
@@ -1056,7 +1001,6 @@
       tasselStatus.innerText = "正在拨穗...";
       tasselKnot.style.background = '#e53e3e';
       
-      // 顺势开启音乐
       toggleMusic(true);
     });
 
@@ -1064,7 +1008,6 @@
       if (!isDraggingTassel) return;
       const dx = e.clientX - dragStartX;
       
-      // 随着手势往左滑，角度从 35度 变到 -35度
       let nextAngle = 35 + (dx / 1.5);
       if (nextAngle > 35) nextAngle = 35;
       if (nextAngle < -35) nextAngle = -35;
@@ -1072,7 +1015,6 @@
       tasselAngle = nextAngle;
       updateTasselPosition(tasselAngle);
 
-      // 到达最左侧判定阈值
       if (tasselAngle <= -33) {
         isDraggingTassel = false;
         tasselKnot.releasePointerCapture(e.pointerId);
@@ -1092,7 +1034,6 @@
     tasselKnot.addEventListener('pointerup', () => {
       if (isDraggingTassel) {
         isDraggingTassel = false;
-        // 回弹
         tasselAngle = 35;
         updateTasselPosition(tasselAngle);
         tasselStatus.innerText = "等待拨穗仪式...";
@@ -1119,7 +1060,6 @@
           flash.className = 'flash-overlay';
           document.body.appendChild(flash);
           
-          // 强制重绘
           flash.getBoundingClientRect();
           flash.style.opacity = '0.85';
           
@@ -1171,24 +1111,20 @@
     // --- 4. Screen 2: 树洞相遇交互逻辑 ---
     function triggerHoleEntryAnimation() {
       setTimeout(() => {
-        // 第一条线延伸
         const heartLine = document.getElementById('heartLine');
         heartLine.style.height = '24px';
         
         setTimeout(() => {
-          // 爱心蹦出来
           const metHeart = document.getElementById('metHeart');
           metHeart.style.opacity = '1';
           metHeart.style.transform = 'scale(1)';
           
           setTimeout(() => {
-            // 女生的回复淡入
             const replyPost = document.getElementById('replyPost');
             replyPost.style.opacity = '1';
             replyPost.style.transform = 'translateY(0)';
             
             setTimeout(() => {
-              // 底部文字提示和进入按钮
               document.getElementById('holeTip').style.opacity = '1';
               document.getElementById('startHoleBtn').style.opacity = '1';
             }, 800);
@@ -1215,7 +1151,7 @@
     const maxClicks = 12;
 
     const gameWords = [
-      "绩点+0.1", "大融城干饭 🍖", "打野送头 ⚔️", "疯狂摸鱼 🎙️",
+      "绩点+0.1", "大融城干饭 🍖", "射手输出带飞 🏹", "辅助贴身护驾 🛡️",
       "元培PPE 👑", "可爱值+999", "买奶茶 🥤", "法学学士学位 ⚖️"
     ];
 
@@ -1235,11 +1171,9 @@
       comboCount.innerText = clicks;
       gpaVal.innerText = currentGpa;
 
-      // 1. 水晶物理打击缩放反馈
       crystalBtn.style.transform = 'scale(0.92)';
       setTimeout(() => { crystalBtn.style.transform = 'scale(1)'; }, 80);
 
-      // 2. 散射飘动文字
       const rect = crystalBtn.getBoundingClientRect();
       const outerRect = crystalBtn.parentElement.getBoundingClientRect();
       const clickX = e.clientX - outerRect.left;
@@ -1262,7 +1196,6 @@
       tapEffectsLayer.appendChild(floatText);
       setTimeout(() => floatText.remove(), 800);
 
-      // 3. 击杀横幅切换与微震动
       if (killVoiced[clicks]) {
         gameBanner.innerText = killVoiced[clicks];
         gameBanner.classList.add('pop');
@@ -1273,17 +1206,14 @@
         }
       }
 
-      // 4. 水晶通关判定
       if (clicks >= maxClicks) {
         setTimeout(() => {
-          // 爆出金色庆贺纸花
           confetti({
             particleCount: 80,
             spread: 50,
             origin: { y: 0.65 },
             colors: ['#FFD700', '#FFA500', '#FFFFFF']
           });
-          // 激活 Victory 蒙层
           victoryOverlay.classList.add('active');
         }, 600);
       }
@@ -1296,27 +1226,25 @@
 
     // --- 6. 北大足迹回忆轴数据与初始化 ---
     const footprints = [
-      { src: "assets/photo_1.jpg", loc: "📍 教学楼教室 · 摸鱼开黑", desc: "在安静的教室里……其实主要是为了在空调房里愉快地摸鱼和双排开黑。" },
-      { src: "assets/photo_5.jpg", loc: "📍 北大图书馆 · 搜寻文献", desc: "在图书馆走廊假装好好学习，寻找哪本书能写进毕业论文里（其实满脑子都是中午吃什么）。" },
-      { src: "assets/photo_6.jpg", loc: "📍 图书馆内部 · 戏精附体", desc: "“大富婆与她的小白脸”，本片由戏精学院元培分院友情赞助，版权所有，翻版必究。" },
-      { src: "assets/photo_7.jpg", loc: "📍 图书馆前 · 场外连线", desc: "站在宏伟的图书馆前，向相机送出“别学了，快带我打王者”的深情呼唤。" },
-      { src: "assets/photo_8.jpg", loc: "📍 未名湖畔 · 风景如画", desc: "湖畔的柳树真绿，湖水真清，女孩真好看，就是微信里的打野经常送人头。" },
-      { src: "assets/photo_9.jpg", loc: "📍 石桥栏杆 · 致命拿捏", desc: "看着你站在桥头微笑，我心想：完了，这下真被拿捏了，这辈子打游戏都得给你辅助了。" },
-      { src: "assets/photo_4.jpg", loc: "📍 湖边绿地 · 饭后消食", desc: "在未名湖畔牵手散步（主要是消食，为了给下一顿大融城做准备）。" },
-      { src: "assets/photo_0.jpg", loc: "📍 北大校园 · 毕业战利品", desc: "拿到红红的元培毕业周边。元培PPE没白读，以后买菜算账更利索了！" },
-      { src: "assets/photo_2.jpg", loc: "📍 百年纪念讲堂 · 毕业受礼", desc: "台上一分钟，台下四年功。恭喜 alick 达成“合法搬砖”法学学士学位称号！" },
-      { src: "assets/photo_3.jpg", loc: "📍 典礼台下 · 校长开绿灯", desc: "和龚校长合影自拍！校长说：“不错，打王者记得带上我。”（误）" }
+      { src: "assets/photo_1.jpg", loc: "📍 教学楼教室 · 排位开黑", desc: "在教室里认真听课……好吧，其实主要是为了在空调房里愉快地排位开黑。" },
+      { src: "assets/photo_5.jpg", loc: "📍 北大图书馆 · 搜寻文献", desc: "在图书馆假装沉迷学术，其实满脑子都在谋划中午去大融城吃什么大餐。" },
+      { src: "assets/photo_6.jpg", loc: "📍 图书馆内部 · 戏精附体", desc: "“大富婆与她的小白脸”，戏精情侣在图书馆的满分cosplay，今日营业中！" },
+      { src: "assets/photo_7.jpg", loc: "📍 图书馆前 · 场外连线", desc: "在图书馆前，送给你最甜的心跳，顺便催促射手快点上线！" },
+      { src: "assets/photo_8.jpg", loc: "📍 未名湖畔 · 风景如画", desc: "未名湖的柳树真绿，旁边的女孩真好看。以后打游戏，你只管保护我，我来输出带飞！" },
+      { src: "assets/photo_9.jpg", loc: "📍 石桥栏杆 · 致命拿捏", desc: "看着你在桥头微笑，我心想：完了，这下真被拿捏了，这辈子打游戏都得听辅助指挥了。" },
+      { src: "assets/photo_4.jpg", loc: "📍 湖边绿地 · 饭后消食", desc: "牵手散步（主要是消食，为了给下一顿大融城做准备）。" },
+      { src: "assets/photo_0.jpg", loc: "📍 北大校园 · 毕业战利品", desc: "拿到红红的元培毕业周边。元培PPE大功告成，以后家里管账的任务就交给你啦！" },
+      { src: "assets/photo_2.jpg", loc: "📍 百年纪念讲堂 · 毕业受礼", desc: "台上一分钟，台下四年功。恭喜 alick 喜提“法学学士学位”荣誉称号！" },
+      { src: "assets/photo_3.jpg", loc: "📍 典礼台下 · 荣誉同框", desc: "和龚校长合影自拍！这可是元培PPE法学学士的排面！" }
     ];
 
     const timelineContainer = document.getElementById('footprintTimeline');
 
     function initFootprintTimeline() {
-      // 避免重复初始化
       if (timelineContainer.children.length > 0) return;
 
       timelineContainer.innerHTML = '';
       footprints.forEach((fp) => {
-        // 创建 timeline item DOM
         const item = document.createElement('div');
         item.className = 'timeline-item';
         item.innerHTML = `
@@ -1333,7 +1261,6 @@
         timelineContainer.appendChild(item);
       });
 
-      // 注册滚动淡入观察器
       registerScrollObserver();
     }
 
@@ -1355,7 +1282,6 @@
 
       items.forEach(item => observer.observe(item));
 
-      // 兜底：对首屏能看到的几张卡片立刻触发显示
       setTimeout(() => {
         for (let i = 0; i < Math.min(items.length, 2); i++) {
           items[i].classList.add('visible');
