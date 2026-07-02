@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Alick 毕业快乐！🎓</title>
+  <!-- 引入 canvas-confetti 粒子喷洒库 -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --pku-red: #9C2C2C;
+      --pku-red-light: rgba(156, 44, 44, 0.1);
+      --love-pink: #FFF0F2;
+      --love-pink-deep: #FFB3C1;
+      --gold: #D4AF37;
+      --gold-light: rgba(212, 175, 55, 0.2);
+      --text-dark: #2D3748;
+      --text-gray: #718096;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--love-pink) 0%, #FFFDFD 100%);
+      color: var(--text-dark);
+    }
+
+    /* 背景漂浮爱心与气泡 */
+    .bg-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      bottom: -60px;
+      border-radius: 50%;
+      animation: floatUp 10s infinite linear;
+      opacity: 0;
+    }
+
+    .heart-particle {
+      position: absolute;
+      bottom: -60px;
+      font-size: 20px;
+      color: rgba(255, 182, 193, 0.6);
+      animation: floatUp 10s infinite linear;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-115vh) scale(1.2) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* 音乐控制按钮 */
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      font-size: 20px;
+      transition: transform 0.2s;
+    }
+
+    .music-btn.playing {
+      animation: spin 4s infinite linear;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Screen 切换系统 */
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), display 0.6s allow-discrete, overlay 0.6s allow-discrete;
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @starting-style {
+      .screen.active {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+    }
+
+    /* 磨砂玻璃卡片 */
+    .card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 28px;
+      padding: 32px 24px;
+      box-shadow: 0 15px 35px rgba(156, 44, 44, 0.06);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* PKU 风格按钮 */
+    .pku-btn {
+      background: linear-gradient(135deg, var(--pku-red) 0%, #b03232 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(156, 44, 44, 0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+      width: 100%;
+      margin-top: 24px;
+    }
+
+    .pku-btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 10px rgba(156, 44, 44, 0.25);
+    }
+
+    /* --- Screen 1: 树洞开场 --- */
+    .treehole-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--pku-red);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .treehole-title {
+      font-weight: 700;
+      color: var(--pku-red);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .treehole-badge {
+      background: var(--pku-red-light);
+      color: var(--pku-red);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .hole-post {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
+    }
+
+    .post-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-gray);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .post-text {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .reply-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reply-tag {
+      color: var(--pku-red);
+      font-weight: 700;
+    }
+
+    /* 树洞心心连接动画 */
+    .heart-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 12px 0;
+      position: relative;
+    }
+
+    .heart-line {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, var(--pku-red) 50%, var(--love-pink-deep) 100%);
+      opacity: 0.6;
+    }
+
+    .pulse-heart {
+      font-size: 32px;
+      margin: 8px 0;
+      animation: heartBeat 1.2s infinite;
+      cursor: pointer;
+    }
+
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.15); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.15); }
+      70% { transform: scale(1); }
+    }
+
+    .hole-tip {
+      font-size: 14px;
+      color: var(--text-gray);
+      margin-top: 16px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* --- Screen 2: 王者小游戏 --- */
+    .game-card {
+      background: radial-gradient(circle at center, #0F1A30 0%, #060B18 100%);
+      color: white;
+      border: 1px solid rgba(0, 191, 255, 0.25);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #00BFFF;
+      text-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .game-desc {
+      font-size: 13px;
+      color: #A0AEC0;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .game-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 12px;
+    }
+
+    .stat-badge {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 10px 8px;
+      font-size: 13px;
+    }
+
+    .stat-label {
+      color: #A0AEC0;
+      font-size: 11px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFD700;
+    }
+
+    .crystal-outer {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 水晶光环与水晶球 */
+    .crystal-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px dashed rgba(0, 191, 255, 0.3);
+      border-radius: 50%;
+      animation: rotateRing 8s infinite linear;
+    }
+
+    @keyframes rotateRing {
+      100% { transform: rotate(360deg); }
+    }
+
+    .crystal-ball {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #00d2ff 0%, #0066cc 40%, #001133 90%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      box-shadow: 0 0 35px rgba(0, 191, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: transform 0.08s;
+      z-index: 5;
+    }
+
+    .crystal-ball:active {
+      transform: scale(0.9);
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+
+    .floating-word {
+      position: absolute;
+      color: #FFD700;
+      font-weight: bold;
+      font-size: 18px;
+      pointer-events: none;
+      animation: floatScatter 0.8s forwards ease-out;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 4px #00BFFF;
+      z-index: 10;
+    }
+
+    @keyframes floatScatter {
+      0% {
+        transform: translate(0, 0) scale(0.7);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .game-banner {
+      height: 48px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFD700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .game-banner.pop {
+      transform: scale(1.25);
+    }
+
+    /* 胜利浮层 */
+    .victory-box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(4, 8, 16, 0.95);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .victory-box.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .victory-title {
+      font-size: 56px;
+      font-weight: 900;
+      color: #FFD700;
+      letter-spacing: 6px;
+      text-shadow: 0 0 30px #ff6600, 0 4px 10px rgba(0,0,0,0.5);
+      animation: victoryEntrance 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    @keyframes victoryEntrance {
+      0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+      100% { transform: scale(1) rotate(-5deg); opacity: 1; }
+    }
+
+    .victory-badge {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFF;
+      background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+      padding: 8px 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* --- Screen 3: 拨穗与扔帽 --- */
+    .tassel-instructions {
+      font-size: 14px;
+      color: var(--text-gray);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .cap-box {
+      width: 220px;
+      height: 160px;
+      margin: 0 auto 28px;
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 24px;
+      border: 1.5px dashed rgba(156, 44, 44, 0.25);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .cap-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .cap-hat-svg {
+      position: absolute;
+      top: 25px;
+      left: 50px;
+      width: 120px;
+      height: 80px;
+      fill: #2D3748;
+    }
+
+    /* 流苏线段 */
+    .cap-tassel-line {
+      position: absolute;
+      width: 3px;
+      height: 50px;
+      background: var(--pku-red);
+      top: 52px;
+      left: 110px;
+      transform-origin: top center;
+      border-radius: 2px;
+    }
+
+    /* 可拖拽流苏结 */
+    .cap-tassel-knot {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      background: radial-gradient(circle, #e53e3e 0%, var(--pku-red) 70%);
+      border: 2px solid white;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      touch-action: none;
+      z-index: 10;
+      top: 92px;
+      left: 92px;
+    }
+
+    .tassel-tip {
+      font-weight: 700;
+      color: var(--pku-red);
+      font-size: 15px;
+      height: 24px;
+      margin-bottom: 8px;
+    }
+
+    /* 扔帽子环节 */
+    .throw-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    .big-cap-emoji {
+      font-size: 90px;
+      cursor: pointer;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+      animation: capWobble 2s infinite ease-in-out;
+    }
+
+    @keyframes capWobble {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+
+    /* --- 照片轮播与终极祝福卡片 --- */
+    .final-card {
+      max-width: 390px;
+      padding: 24px 20px;
+    }
+
+    /* 相册轮播容器 */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      background: #eaeaea;
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 1000%; /* 10张图，每张占 10% */
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .carousel-item {
+      width: 10%;
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 12px 14px 10px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* 左右按钮 */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      font-size: 16px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      z-index: 12;
+      transition: background 0.2s;
+    }
+
+    .carousel-btn:active {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .carousel-btn.prev { left: 12px; }
+    .carousel-btn.next { right: 12px; }
+
+    /* 指示圆点 */
+    .carousel-dots {
+      position: absolute;
+      bottom: 40px; /* 放在 caption 的上方 */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 13;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      transition: background 0.3s, width 0.3s;
+    }
+
+    .dot.active {
+      background: white;
+      width: 16px;
+      border-radius: 10px;
+    }
+
+    .blessing-content {
+      text-align: center;
+    }
+
+    .blessing-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--pku-red);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .blessing-sub {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .blessing-divider {
+      border: 0;
+      border-top: 1.5px dashed rgba(156, 44, 44, 0.2);
+      margin: 12px 0;
+    }
+
+    .blessing-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #4A5568;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 音乐播放器与控制按钮 -->
+  <button class="music-btn" id="musicBtn">🎵</button>
+  <audio id="bgm" loop preload="auto" src="https://music.wixstatic.com/mp3/9db7e6_77bd8e2a868444a79679f29107937be1.mp3"></audio>
+
+  <!-- 全局飘动背景气泡 -->
+  <div class="bg-particles" id="particlesContainer"></div>
+
+  <!-- --- SCREEN 1: 树洞开场 --- -->
+  <div class="screen active" id="screenHole">
+    <div class="card">
+      <div class="treehole-header">
+        <span class="treehole-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--pku-red);"><path d="M12 2L2 22h20L12 2z"/><path d="M12 10v6"/><path d="M12 18h.01"/></svg>
+          北大树洞
+        </span>
+        <span class="treehole-badge">元培专区</span>
+      </div>
+
+      <div class="hole-post">
+        <div class="post-meta">
+          <span>#102400 (洞主)</span>
+          <span>刚刚</span>
+        </div>
+        <div class="post-text">
+          男好想谈恋爱 🥺
+        </div>
+      </div>
+
+      <div class="heart-connector">
+        <div class="heart-line" id="heartLine" style="height: 0; transition: height 0.6s;"></div>
+        <div class="pulse-heart" id="metHeart" style="opacity: 0; transform: scale(0.5); transition: opacity 0.5s, transform 0.5s;">💖</div>
+      </div>
+
+      <div class="hole-post" id="replyPost" style="opacity: 0; transform: translateY(15px); transition: opacity 0.6s, transform 0.6s;">
+        <div class="post-meta">
+          <span class="reply-meta"><span class="reply-tag">Re:</span> #102400</span>
+          <span>刚刚</span>
+        </div>
+        <div class="post-text">
+          a女好想谈恋爱 🙋‍♀️
+        </div>
+      </div>
+
+      <div class="hole-tip" id="holeTip" style="opacity: 0; transition: opacity 0.6s;">
+        原来我们就是彼此的答案 💕
+      </div>
+
+      <button class="pku-btn" id="startBtn" style="opacity: 0; transition: opacity 0.6s;">进入我们的故事</button>
+    </div>
+  </div>
+
+  <!-- --- SCREEN 2: 王者连击小游戏 --- -->
+  <div class="screen" id="screenGame">
+    <div class="card game-card">
+      <div class="game-title">⚔️ 毕业大作战 ⚔️</div>
+      <div class="game-desc">狂戳中心的水晶，帮助 alick 充能毕业！</div>
+
+      <div class="game-stats">
+        <div class="stat-badge">
+          <div class="stat-label">COMBO 连击</div>
+          <div class="stat-value" id="comboCount">0</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-label">GPA 绩点</div>
+          <div class="stat-value" id="gpaVal">0.00</div>
+        </div>
+      </div>
+
+      <div class="crystal-outer">
+        <div class="crystal-ring"></div>
+        <div class="crystal-ball" id="crystalBtn">💎</div>
+        <div id="tapEffectsLayer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+      </div>
+
+      <div class="game-banner" id="gameBanner">FIRST BLOOD</div>
+
+      <!-- 王者荣耀胜利弹出面板 -->
+      <div class="victory-box" id="victoryOverlay">
+        <div class="victory-title">VICTORY</div>
+        <div class="victory-badge">👑 荣耀毕业生 · 大融城特级美食家</div>
+        <button class="pku-btn" id="victoryBtn" style="box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); background: linear-gradient(135deg, #FF8C00 0%, #FF4500 100%);">授予学位证书</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- --- SCREEN 3: 拨穗与扔学士帽 --- -->
+  <div class="screen" id="screenGraduation">
+    <div class="card" id="cardGraduation">
+      <!-- 阶段A：指尖拨穗 -->
+      <div id="tasselStage" style="display: block;">
+        <h2 style="color: var(--pku-red); margin-bottom: 8px;">🎓 毕业典礼 · 拨穗</h2>
+        <div class="tassel-instructions">指尖向左拖拽红色流苏结<br>为 alick 举行正式拨穗礼</div>
+
+        <div class="cap-box">
+          <div class="cap-wrapper">
+            <!-- 学士帽的SVG矢量图 -->
+            <svg class="cap-hat-svg" viewBox="0 0 100 80">
+              <path d="M 50 12 L 92 32 L 50 52 L 8 32 Z" fill="#2d3748" />
+              <polygon points="50,52 50,68 82,56" fill="#1a202c" opacity="0.15" />
+              <rect x="34" y="44" width="32" height="16" fill="#2d3748" rx="2" />
+            </svg>
+            <div class="cap-tassel-line" id="tasselLine"></div>
+            <div class="cap-tassel-knot" id="tasselKnot">🔴</div>
+          </div>
+        </div>
+
+        <div class="tassel-tip" id="tasselStatus">等待拨穗仪式...</div>
+      </div>
+
+      <!-- 阶段B：扔学士帽 -->
+      <div class="throw-stage" id="throwStage" style="display: none;">
+        <h2 style="color: var(--pku-red); margin-bottom: 8px;">🎓 拨穗礼成</h2>
+        <div class="tassel-instructions">现在，点击学士帽<br>抛向蔚蓝的天空！</div>
+
+        <div class="big-cap-emoji" id="throwCapBtn">🎓</div>
+      </div>
+
+      <!-- 阶段C：终极展示 -->
+      <div id="finalStage" style="display: none;">
+        <!-- 照片相册轮播 -->
+        <div class="carousel-container">
+          <div class="carousel-track" id="carouselTrack">
+            <!-- JS 动态加载 10 张照片 -->
+          </div>
+          <button class="carousel-btn prev" id="prevBtn">❮</button>
+          <button class="carousel-btn next" id="nextBtn">❯</button>
+          <div class="carousel-dots" id="carouselDots">
+            <!-- 动态生成 10 个圆点 -->
+          </div>
+        </div>
+
+        <!-- 毕业祝福信 -->
+        <div class="blessing-content">
+          <div class="blessing-title">🎉 祝 alick 毕业快乐 🎉</div>
+          <div class="blessing-sub">北京大学元培学院 · PPE专业 法学学士</div>
+          <hr class="blessing-divider">
+          <div class="blessing-desc">
+            “从初见那条可爱的树洞，到一起并肩在王者上星，一起吃遍大融城的美食。恭喜你拿到学士学位！在未来的日子里，我们继续并肩作战，携手走过更多美好的风景，吃遍世界的美食！”
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. 背景粒子飘动系统 ---
+    const particlesContainer = document.getElementById('particlesContainer');
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 12 : 20;
+
+    for (let i = 0; i < particleCount; i++) {
+      const isHeart = Math.random() > 0.5;
+      const el = document.createElement('div');
+      
+      if (isHeart) {
+        el.className = 'heart-particle';
+        el.innerText = Math.random() > 0.5 ? '💖' : '🌸';
+      } else {
+        el.className = 'particle';
+        el.style.background = `rgba(255, ${Math.floor(Math.random()*80 + 120)}, ${Math.floor(Math.random()*80 + 160)}, 0.45)`;
+        const size = Math.random() * 20 + 10;
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
+      }
+      
+      el.style.left = `${Math.random() * 100}%`;
+      el.style.animationDelay = `${Math.random() * 10}s`;
+      el.style.animationDuration = `${Math.random() * 5 + 6}s`;
+      particlesContainer.appendChild(el);
+    }
+
+    // --- 2. 音乐开关控制 ---
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    
+    // 设置音量适中
+    bgm.volume = 0.5;
+
+    musicBtn.addEventListener('click', () => {
+      toggleMusic();
+    });
+
+    function toggleMusic(playForce = null) {
+      if (playForce === true || (playForce === null && bgm.paused)) {
+        bgm.play().then(() => {
+          musicBtn.classList.add('playing');
+        }).catch(err => {
+          console.log("Audio autoplay blocked, waiting for user click.", err);
+        });
+      } else {
+        bgm.pause();
+        musicBtn.classList.remove('playing');
+      }
+    }
+
+    // 辅助场景切换
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    // --- 3. Screen 1: 树洞交互逻辑 ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // 阶段式动效展现
+      setTimeout(() => {
+        // 第一条线延伸
+        const heartLine = document.getElementById('heartLine');
+        heartLine.style.height = '24px';
+        
+        setTimeout(() => {
+          // 爱心蹦出来
+          const metHeart = document.getElementById('metHeart');
+          metHeart.style.opacity = '1';
+          metHeart.style.transform = 'scale(1)';
+          
+          setTimeout(() => {
+            // 女生的回复淡入
+            const replyPost = document.getElementById('replyPost');
+            replyPost.style.opacity = '1';
+            replyPost.style.transform = 'translateY(0)';
+            
+            setTimeout(() => {
+              // 底部文字提示和进入按钮
+              document.getElementById('holeTip').style.opacity = '1';
+              document.getElementById('startBtn').style.opacity = '1';
+            }, 800);
+          }, 800);
+        }, 600);
+      }, 1000);
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      showScreen('screenGame');
+      toggleMusic(true); // 用户点击按钮时顺势开播背景音乐
+    });
+
+    // --- 4. Screen 2: 王者连击游戏逻辑 ---
+    const crystalBtn = document.getElementById('crystalBtn');
+    const comboCount = document.getElementById('comboCount');
+    const gpaVal = document.getElementById('gpaVal');
+    const gameBanner = document.getElementById('gameBanner');
+    const tapEffectsLayer = document.getElementById('tapEffectsLayer');
+    const victoryOverlay = document.getElementById('victoryOverlay');
+    const victoryBtn = document.getElementById('victoryBtn');
+
+    let clicks = 0;
+    let currentGpa = 0.00;
+    const maxClicks = 12;
+
+    const gameWords = [
+      "绩点+0.1", "吃大融城 🍖", "打王者 ⚔️", "开麦连麦 🎙️",
+      "元培PPE 👑", "可爱值+999", "买奶茶 🥤", "法学学士学位 ⚖️"
+    ];
+
+    const killVoiced = {
+      1: "FIRST BLOOD! (大四开学)",
+      3: "DOUBLE KILL! (绩点飞升)",
+      6: "TRIPLE KILL! (论文通过)",
+      9: "QUADRA KILL! (大融城免单)",
+      12: "PENTA KILL! (顺利毕业！)"
+    };
+
+    crystalBtn.addEventListener('pointerdown', (e) => {
+      if (clicks >= maxClicks) return;
+
+      clicks++;
+      currentGpa = (clicks * (4.0 / maxClicks)).toFixed(2);
+      comboCount.innerText = clicks;
+      gpaVal.innerText = currentGpa;
+
+      // 1. 水晶物理打击缩放反馈 (CSS :active 处理，这里也加上小幅弹颤)
+      crystalBtn.style.transform = 'scale(0.92)';
+      setTimeout(() => { crystalBtn.style.transform = 'scale(1)'; }, 800 * 0.1);
+
+      // 2. 散射飘动文字
+      const rect = crystalBtn.getBoundingClientRect();
+      const outerRect = crystalBtn.parentElement.getBoundingClientRect();
+      const clickX = e.clientX - outerRect.left;
+      const clickY = e.clientY - outerRect.top;
+
+      const floatText = document.createElement('div');
+      floatText.className = 'floating-word';
+      floatText.innerText = gameWords[Math.floor(Math.random() * gameWords.length)];
+      
+      // 散射偏角
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * 60 + 50;
+      const x = Math.cos(angle) * dist;
+      const y = Math.sin(angle) * dist;
+
+      floatText.style.setProperty('--x', `${x}px`);
+      floatText.style.setProperty('--y', `${y}px`);
+      floatText.style.left = `${clickX}px`;
+      floatText.style.top = `${clickY}px`;
+
+      tapEffectsLayer.appendChild(floatText);
+      setTimeout(() => floatText.remove(), 800);
+
+      // 3. 击杀横幅切换与微震动
+      if (killVoiced[clicks]) {
+        gameBanner.innerText = killVoiced[clicks];
+        gameBanner.classList.add('pop');
+        setTimeout(() => gameBanner.classList.remove('pop'), 200);
+
+        if (navigator.vibrate) {
+          navigator.vibrate(clicks === maxClicks ? [100, 50, 100] : 60);
+        }
+      }
+
+      // 4. 水晶通关判定
+      if (clicks >= maxClicks) {
+        setTimeout(() => {
+          // 爆出金色庆贺纸花
+          confetti({
+            particleCount: 80,
+            spread: 50,
+            origin: { y: 0.65 },
+            colors: ['#FFD700', '#FFA500', '#FFFFFF']
+          });
+          // 激活 Victory 蒙层
+          victoryOverlay.classList.add('active');
+        }, 600);
+      }
+    });
+
+    victoryBtn.addEventListener('click', () => {
+      showScreen('screenGraduation');
+    });
+
+    // --- 5. Screen 3: 拨穗与学士帽交互 ---
+    const tasselKnot = document.getElementById('tasselKnot');
+    const tasselLine = document.getElementById('tasselLine');
+    const tasselStatus = document.getElementById('tasselStatus');
+    const tasselStage = document.getElementById('tasselStage');
+    const throwStage = document.getElementById('throwStage');
+    const throwCapBtn = document.getElementById('throwCapBtn');
+    const finalStage = document.getElementById('finalStage');
+    const cardGraduation = document.getElementById('cardGraduation');
+
+    const capCenterX = 110; // 流苏悬垂支点坐标
+    let tasselAngle = 35; // 默认悬挂偏右 35 度
+    let isDraggingTassel = false;
+    let dragStartX = 0;
+
+    // 根据倾角渲染流苏线和流苏红结位置
+    function updateTasselPosition(deg) {
+      tasselLine.style.transform = `rotate(${deg}deg)`;
+      const rad = deg * Math.PI / 180;
+      // 流苏细线长 50px
+      const knotX = capCenterX + Math.sin(rad) * 50;
+      const knotY = 52 + Math.cos(rad) * 50;
+      
+      tasselKnot.style.left = `${knotX - 18}px`; // 减去结半径(18px)居中
+      tasselKnot.style.top = `${knotY - 18}px`;
+    }
+
+    // 默认定位
+    updateTasselPosition(tasselAngle);
+
+    tasselKnot.addEventListener('pointerdown', (e) => {
+      isDraggingTassel = true;
+      dragStartX = e.clientX;
+      tasselKnot.setPointerCapture(e.pointerId);
+      tasselStatus.innerText = "正在拨穗...";
+      tasselKnot.style.background = '#e53e3e';
+    });
+
+    tasselKnot.addEventListener('pointermove', (e) => {
+      if (!isDraggingTassel) return;
+      const dx = e.clientX - dragStartX;
+      
+      // 随着手势往左滑，角度从 35度 变到 -35度
+      let nextAngle = 35 + (dx / 1.5);
+      if (nextAngle > 35) nextAngle = 35;
+      if (nextAngle < -35) nextAngle = -35;
+      
+      tasselAngle = nextAngle;
+      updateTasselPosition(tasselAngle);
+
+      // 到达最左侧判定阈值
+      if (tasselAngle <= -33) {
+        isDraggingTassel = false;
+        tasselKnot.releasePointerCapture(e.pointerId);
+        tasselKnot.style.display = 'none';
+        tasselLine.style.transform = 'rotate(-35deg)';
+        tasselStatus.innerText = "🎉 拨穗完成，恭喜毕业！";
+        
+        if (navigator.vibrate) navigator.vibrate([80, 50, 80]);
+
+        setTimeout(() => {
+          tasselStage.style.style = 'none'; // 触发隐藏
+          tasselStage.style.display = 'none';
+          throwStage.style.display = 'flex';
+        }, 1000);
+      }
+    });
+
+    tasselKnot.addEventListener('pointerup', () => {
+      if (isDraggingTassel) {
+        isDraggingTassel = false;
+        // 回弹
+        tasselAngle = 35;
+        updateTasselPosition(tasselAngle);
+        tasselStatus.innerText = "等待拨穗仪式...";
+        tasselKnot.style.background = 'radial-gradient(circle, #e53e3e 0%, var(--pku-red) 70%)';
+      }
+    });
+
+    // 扔学士帽爆 confettis
+    throwCapBtn.addEventListener('click', () => {
+      throwCapBtn.style.transform = 'translateY(-280px) scale(0.1) rotate(540deg)';
+      throwCapBtn.style.opacity = '0';
+
+      if (navigator.vibrate) navigator.vibrate(100);
+
+      // 喷射漫天彩纸
+      let duration = 3.5 * 1000;
+      let animationEnd = Date.now() + duration;
+      let defaults = { startVelocity: 25, spread: 360, ticks: 50, zIndex: 99 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      let interval = setInterval(function() {
+        let timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        let particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
+
+      setTimeout(() => {
+        throwStage.style.display = 'none';
+        cardGraduation.classList.add('final-card');
+        finalStage.style.display = 'block';
+        initPhotoCarousel();
+      }, 1500);
+    });
+
+    // --- 6. 毕业纪念相册轮播系统 ---
+    const photos = [
+      { src: "assets/photo_4.jpg", text: "未名湖畔相依，阳光洒在我们的肩上 💚" },
+      { src: "assets/photo_1.jpg", text: "坐在阳光明媚的教室里，安静而温暖 ☀️" },
+      { src: "assets/photo_2.jpg", text: "元培学院典礼台上，庄严接取学士证书 🎓" },
+      { src: "assets/photo_3.jpg", text: "与龚旗煌校长亲切合照，开心的笑脸 ✌️" },
+      { src: "assets/photo_5.jpg", text: "在图书馆书架间探寻，寻找属于未来的那一页 📖" },
+      { src: "assets/photo_6.jpg", text: "我是大富婆，他是我的小白脸！图书馆搞怪还原合影 🤭" },
+      { src: "assets/photo_7.jpg", text: "图书馆前，朝相机送去最甜的爱心指心 💖" },
+      { src: "assets/photo_8.jpg", text: "未名湖畔柳树依依，温柔晚风抚发 🍃" },
+      { src: "assets/photo_9.jpg", text: "站在未名湖石桥上，倚靠桥栏微风拂面 🌸" },
+      { src: "assets/photo_0.jpg", text: "手捧精美喜庆的北大红信封与毕业周边 🧧" }
+    ];
+
+    let currentSlide = 0;
+    const carouselTrack = document.getElementById('carouselTrack');
+    const carouselDots = document.getElementById('carouselDots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function initPhotoCarousel() {
+      carouselTrack.innerHTML = '';
+      carouselDots.innerHTML = '';
+      
+      photos.forEach((photo, idx) => {
+        // 创建slide slide
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.innerHTML = `
+          <img src="${photo.src}" alt="毕业纪念照">
+          <div class="carousel-caption">${photo.text}</div>
+        `;
+        carouselTrack.appendChild(item);
+
+        // 创建 dot dot
+        const dot = document.createElement('div');
+        dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+        dot.addEventListener('click', () => jumpToSlide(idx));
+        carouselDots.appendChild(dot);
+      });
+    }
+
+    function updateCarousel() {
+      carouselTrack.style.transform = `translateX(-${currentSlide * 10}%)`;
+      // 更新圆点
+      const dots = carouselDots.querySelectorAll('.dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentSlide);
+      });
+    }
+
+    function jumpToSlide(idx) {
+      currentSlide = idx;
+      updateCarousel();
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % photos.length;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + photos.length) % photos.length;
+      updateCarousel();
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // 适配手指滑屏切换
+    let touchStartX = 0;
+    carouselTrack.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    carouselTrack.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diffX = touchEndX - touchStartX;
+      if (diffX > 50) {
+        prevSlide();
+      } else if (diffX < -50) {
+        nextSlide();
+      }
+    }, { passive: true });
+
+  </script>
+</body>
+</html>
